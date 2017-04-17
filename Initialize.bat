@@ -1,9 +1,10 @@
 @ECHO off
-for /f %%i in ("CMD") do set size=%%~zi
-if %size% gtr 0 ( set /p tempVar=<"CMD" ) else ( set tempVar=False)
-if %tempVar% EQU true ( goto node ) else (echo Updating CMD)
-Echo Please Wait
-TIMEOUT 3
+::for /f %%i in ("CMD") do set size=%%~zi
+::if %size% gtr 0 ( set /p tempVar=<"CMD" ) else ( set tempVar=False)
+::if %tempVar% EQU true ( goto node ) else (echo Updating CMD)
+:Echo Please Wait
+::TIMEOUT 3
+Echo Starting up!
 start bin/CMD.reg
 TIMEOUT 2
 :Cmd
