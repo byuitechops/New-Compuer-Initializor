@@ -1,10 +1,4 @@
 @ECHO off
-::for /f %%i in ("CMD") do set size=%%~zi
-::if %size% gtr 0 ( set /p tempVar=<"CMD" ) else ( set tempVar=False)
-::if %tempVar% EQU true ( goto node ) else (echo Updating CMD)
-:Echo Please Wait
-::TIMEOUT 3
-Echo Starting up!
 start bin/CMD.reg
 TIMEOUT 2
 :Cmd
@@ -130,6 +124,12 @@ if %check% NEQ Y (goto Npmn) else (goto Git)
 :Brackets
 Please Wait
 TIMEOUT 2
+set /p name="Enter your Name(First Last): "
+set /p email="Enter your git account email: "
+cmd /c git config --global user.name %name%
+cmd /c git config --global user.email %email%
+cmd /c git config --global core.editor "'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -notabbar -nosession"
+cmd /c git config --global --add core.pager cat
 cmd /C "cd /D %HOMEDRIVE%%HOMEPATH%\AppData\Roaming\Brackets\extensions\user"
 cmd /C "git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry"
 cmd /C "cd brackets-npm-registry"
