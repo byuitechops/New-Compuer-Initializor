@@ -52,9 +52,9 @@ echo Please don't move on until completeting the Installer
 set /P check="Have you finished installing Git? (Y/N): "
 if %check% NEQ Y (goto Gitn) else (goto Brackets)
 
+:Node
 echo Nodejs.org will open, please check the current version, then enter it into the prompt.
 TIMEOUT 7
-:Node
 start /min "Nodejs" "https://nodejs.org"
 :NodeCheck
 set /p ver="What is the current version of Node listed?(I.E. v7.9.0): "
