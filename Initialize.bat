@@ -52,29 +52,18 @@ echo Please don't move on until completeting the Installer
 set /P check="Have you finished installing Git? (Y/N): "
 if %check% NEQ Y (goto Gitn) else (goto Brackets)
 
+echo Nodejs.org will open, please check the current version, then enter it into the prompt.
+TIMEOUT 7
 :Node
-cmd /C "node -v" >> "temp" || goto nodeCrash
-:nodeCrash
-for /f %%i in ("temp") do set size=%%~zi
-if %size% EQU 0 ( goto setNode  ) else ( goto nodeSetTemp)
-:nodeSetTemp
-set /p ver=<"temp" 
-:nodeVer
-del "temp."
-set string="'node' is not recognized as an internal or external command, operable program or batch file."
-if %ver% NEQ %string% ( goto nodeUpdate) else ( goto nodeFreshUp )
-
-:nodeUpdate
-echo "Node was found on your computer, Update will commence"
-:nodeUpdateCont
-cmd /C "node bin/getLink.js" || goto nodeCheerio
-echo Entering nodeUpdateCont
-Set /P version=<node.txt
-Set /p vers=<nodeVer.txt
+start /min "Nodejs" "https://nodejs.org"
+:NodeCheck
+set /p ver="What is the current version of Node listed?(I.E. v7.9.0): "
+set /p check="You're sure the version listed matches %ver%? (Y/N): "
+if %check% NEQ Y (goto NodeCheck)
+cmd /c node bin/writeLink.js %ver%
+set /p URL=<node.txt
 del node.txt
-del nodeVer.txt 
-set mypath=%cd%
-powershell -Command "Invoke-WebRequest %version% -OutFile nodeInstaller.msi"
+powershell -Command "Invoke-WebRequest " %URL% "  -OutFile NodeInstaller.msi"
 Echo Please Wait
 TIMEOUT 4
 start NodeInstaller.msi
@@ -82,22 +71,6 @@ start NodeInstaller.msi
 echo Please don't move on until completeting the Installer
 set /P check="Have you finished installing Node? (Y/N): "
 if %check% NEQ Y (goto Noden) else (goto Npm)
-
-:nodeFreshUp
-powershell -Command "Invoke-WebRequest https://nodejs.org/dist/v7.8.0/node-v7.8.0-x64.msi -OutFile NodeInstaller.msi"
-Echo Please Wait
-TIMEOUT 3 
-start nodeInstaller.msi
-:NodeFn
-echo Please don't move on until completeting the Installer
-set /P check="Have you finished installing Node? (Y/N): "
-if %check% NEQ Y (goto NodeFn) else (goto Npm)
-pause
-goto Npm
-
-:setNode
-set ver="'node' is not recognized as an internal or external command, operable program or batch file."
-goto nodeVer
 
 :nodeCheerio
 echo Entering nodeCheerio
@@ -130,15 +103,32 @@ cmd /c git config --global user.name %name%
 cmd /c git config --global user.email %email%
 cmd /c git config --global core.editor "'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -notabbar -nosession"
 cmd /c git config --global --add core.pager cat
-cmd /C "cd /D %HOMEDRIVE%%HOMEPATH%\AppData\Roaming\Brackets\extensions\user"
+
+:Bracket
+cmd /C "brackets" || goto bracketsInstall
+goto skipNPM
+
+:bracketsInstall
+cmd /c "node bin/getBrackets.js"
+Set /P bracketsURL=<brackets.txt
+del brackets.txt
+powershell -Command "Invoke-WebRequest %bracketsURL% -OutFile bracketsInstaller.msi"
+Echo Please Wait
+TIMEOUT 3 
+start bracketsInstaller.msi
+:Bracketsn
+echo Please don't move on until completeting the Installer
+set /P check="Have you finished installing Node? (Y/N): "
+if %check% NEQ Y ( goto bracketsn) else goto BracketsNPM
+:BracketsNPM
+cmd /C "cd /D %HOMEDRIVE%\%HOMEPATH%\AppData\Roaming\Brackets\extensions\user"
 cmd /C "git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry"
 cmd /C "cd brackets-npm-registry"
 cmd /C "npm install"
-:Bracketsn
+:Bracketsnpmn
 echo Please don't move on until completeting the Installer
 set /P check="Have you finished installing Brackets-NPM-Registry? (Y/N): "
-if %check% NEQ Y (goto Bracketsn) else (goto Slack)
-
+if %check% NEQ Y (goto Bracketsnpmn) else (goto Slack)
 :cleanUp
 del NodeInstaller.msi
 del GitInstall.exe
