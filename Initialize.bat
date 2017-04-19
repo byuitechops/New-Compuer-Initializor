@@ -10,17 +10,6 @@ pause
 echo true>>"CMD"
 goto node
 pause
-pause
-:Slack
-if Exist C:\Users\%USERNAME%\AppData\Local\slack\slack.exe ( goto cleanUp) else ( echo Installing Slack)
-powershell -Command "Invoke-WebRequest https://slack.com/ssb/download-win64 -OutFile SlackInstall.exe"
-Echo Please Wait
-TIMEOUT 5
-start SlackInstall.exe
-:Slackn
-echo Please don't move on until completeting the Installer
-set /P check="Have you finished installing Slack? (Y/N): "
-if %check% NEQ Y (goto Slackn) else (goto cleanUp)
 
 :Git
 cmd /C "git --version" >> "temp"
@@ -42,7 +31,7 @@ if "%gitVer%" NEQ "%gitString%" ( echo "Git was found on your computer, Update w
 cmd /C "node bin/getGitLink.js"
 Set /P gitLink=<gitLink.txt
 del gitLink.txt
-echo %gitLink%
+echo . & echo . & echo . & echo . & echo . & echo Downloading Git, this may take some time.
 powershell -Command "Invoke-WebRequest %gitLink% -OutFile GitInstall.exe"
 Echo Please Wait
 TIMEOUT 5
@@ -52,35 +41,45 @@ echo Please don't move on until completeting the Installer
 set /P check="Have you finished installing Git? (Y/N): "
 if %check% NEQ Y (goto Gitn) else (goto Brackets)
 
-:Node
-echo Nodejs.org will open, please check the current version, then enter it into the prompt.
+:nodeError
+echo It appears the version number you entered was incorrect, please check the website and try again.
 TIMEOUT 7
-start /min "Nodejs" "https://nodejs.org"
+goto Node
+
+echo Nodejs.org will open, please check the current version on their website, then enter it into the prompt. It should be located next to the word "Current".
+TIMEOUT 9
+:Node
+start "Nodejs" "https://nodejs.org"
 :NodeCheck
-set /p ver="What is the current version of Node listed?(I.E. v7.9.0): "
+set /p ver="What is the current version of Node listed on the Nodejs website?(ex v7.9.0): "
 set /p check="You're sure the version listed matches %ver%? (Y/N): "
 if %check% NEQ Y (goto NodeCheck)
+cmd /c "node -v" >> "temp"
+set /p nodeVer=<"temp"
+del "temp"
+if %nodeVer% NEQ %ver% ( goto dowNode ) else ( goto Npm )
+:dowNode
 cmd /c node bin/writeLink.js %ver%
 set /p URL=<node.txt
 del node.txt
-powershell -Command "Invoke-WebRequest " %URL% "  -OutFile NodeInstaller.msi"
+powershell -Command "Invoke-WebRequest " %URL% " -OutFile NodeInstaller.msi" || goto nodeError
 Echo Please Wait
 TIMEOUT 4
 start NodeInstaller.msi
 :Noden
 echo Please don't move on until completeting the Installer
 set /P check="Have you finished installing Node? (Y/N): "
-if %check% NEQ Y (goto Noden) else (goto Npm)
+if %check% NEQ Y ( goto Noden ) else ( goto Npm )
 
 :nodeCheerio
 echo Entering nodeCheerio
 Echo Please Wait
 TIMEOUT 2
-cmd /C "npm install cheerio"
+cmd /C "npm install cheerio -g"
 :Cheerion
 echo Please don't move on until completeting the Installer
 set /P check="Have you finished installing Cheerio? (Y/N): "
-if %check% NEQ Y (goto Cheerion) else (goto NodeUpdateCont)
+if %check% NEQ Y (goto Cheerion) else (goto Git)
 
 :Npm
 echo Please Wait
@@ -92,7 +91,7 @@ del "temp"
 :Npmn
 echo Please don't move on until completeting the Installer
 set /P check="Have you finished installing NPM? (Y/N): "
-if %check% NEQ Y (goto Npmn) else (goto Git)
+if %check% NEQ Y (goto Npmn) else (goto nodeCheerio)
 
 :Brackets
 Please Wait
@@ -106,7 +105,7 @@ cmd /c git config --global --add core.pager cat
 
 :Bracket
 cmd /C "brackets" || goto bracketsInstall
-goto skipNPM
+goto BracketsNPM
 
 :bracketsInstall
 cmd /c "node bin/getBrackets.js"
@@ -121,14 +120,27 @@ echo Please don't move on until completeting the Installer
 set /P check="Have you finished installing Node? (Y/N): "
 if %check% NEQ Y ( goto bracketsn) else goto BracketsNPM
 :BracketsNPM
+move "%~dp0bin\brackets.json" "C:\Users\%USERNAME%\AppData\Roaming\Brackets"
 cmd /C "cd /D %HOMEDRIVE%\%HOMEPATH%\AppData\Roaming\Brackets\extensions\user"
 cmd /C "git clone https://github.com/zaggino/brackets-npm-registry.git brackets-npm-registry"
 cmd /C "cd brackets-npm-registry"
-cmd /C "npm install"
+cmd /C "npm install -g"
 :Bracketsnpmn
 echo Please don't move on until completeting the Installer
 set /P check="Have you finished installing Brackets-NPM-Registry? (Y/N): "
 if %check% NEQ Y (goto Bracketsnpmn) else (goto Slack)
+
+:Slack
+if Exist C:\Users\%USERNAME%\AppData\Local\slack\slack.exe ( goto cleanUp ) else ( echo Installing Slack )
+powershell -Command "Invoke-WebRequest https://slack.com/ssb/download-win64 -OutFile SlackInstall.exe"
+Echo Please Wait
+TIMEOUT 5
+start SlackInstall.exe
+:Slackn
+echo Please don't move on until completeting the Installer, This one is particularly lengthy.
+set /P check="Have you finished installing Slack? (Y/N): "
+if %check% NEQ Y (goto Slackn) else (goto cleanUp)
+
 :cleanUp
 del NodeInstaller.msi
 del GitInstall.exe
@@ -136,5 +148,5 @@ del SlackInstall.exe
 del tempVar
 
 Echo Set-up Complete! Exiting Now
-TIMEOUT 3
+TIMEOUT 5
 exit
