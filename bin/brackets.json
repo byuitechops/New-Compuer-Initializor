@@ -1,0 +1,42 @@
+{
+    "fonts.fontSize": "12px",
+    "fonts.fontFamily": "'SourceCodePro-Medium', ＭＳ ゴシック, 'MS Gothic', monospace",
+    "brackets-eslint.gutterMarks": true,
+    "open.in.browser.extensionFileDefault": [
+        "jpg",
+        "jpeg",
+        "gif",
+        "png",
+        "ico"
+    ],
+    "open.in.browser.extensionFileChrome": [
+        "htm",
+        "html",
+        "xhtml",
+        "php",
+        "php3",
+        "php4",
+        "php5",
+        "phtm",
+        "phtml",
+        "cfm",
+        "cfml",
+        "asp",
+        "aspx",
+        "jsp",
+        "jspx",
+        "shtm",
+        "shtml"
+    ],
+    "language": {
+        "javascript": {
+            "linting.prefer": [
+                "ESLint"
+            ],
+            "linting.usePreferredOnly": true
+        }
+    },
+    "openinterm.terminal": "cmd",
+    "scrollPastEnd": true,
+    "insertHintOnTab": true
+}
