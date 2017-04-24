@@ -19,4 +19,4 @@ cmd /C "npm install --prefix %~dp0 cheerio"
 :Cheerion
 echo Please don't move on until completeting the Installer
 set /P check="Have you finished installing Cheerio? (Y/N): "
-if %check% NEQ Y (goto Cheerion) else ( starzt %~dp0Initialize_git.bat exit )
+if %check% NEQ Y (goto Cheerion) else ( start %~dp0Initialize_git.bat exit )
