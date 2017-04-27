@@ -95,7 +95,7 @@ set /P check="Have you finished installing Cheerio? (Y/N): "
 if %check% NEQ Y (goto Cheerion) else (goto Git)
 
 :Brackets
-cmd /c "start %~dp0Initialize_II.bat"
+cmd /c "start %~dp0Initialize_NPM.bat"
 exit
 Please Wait
 TIMEOUT 2
