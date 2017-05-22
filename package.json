@@ -1,0 +1,16 @@
+{
+  "name": "new-computer-initializer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": "NA"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/byuitechops/new-computer-initializer"
+  },
+  "author": "Grey Winert",
+  "license": "MIT",
+  "devDependencies": ""
+}
