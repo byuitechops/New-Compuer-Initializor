@@ -1,10 +1,10 @@
 {
   "name": "new-computer-initializer",
   "version": "1.0.0",
-  "description": "",
-  "main": "",
+  "description": "A script that will initialize computers to be set up to standard for our team",
+  "main": "initialize.bat",
   "scripts": {
-    "test": "NA"
+    "test": "N/A"
   },
   "repository": {
     "type": "git",
